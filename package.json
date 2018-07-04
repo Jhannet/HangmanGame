@@ -10,5 +10,13 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.16.3"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jhannet/HangmanGame.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jhannet/HangmanGame/issues"
+  },
+  "homepage": "https://github.com/Jhannet/HangmanGame#readme"
 }
