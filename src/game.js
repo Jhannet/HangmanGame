@@ -1,54 +1,76 @@
 const fs = require('fs')
-const games = [];
+const Dictionary = require('./dictionary.js')
+
+let games;
 class Game {
 	constructor (id, word) {
 		this.id = id;
 		this.hint = word;//'_ _ _ _ A';
 		this.leftAttempts = 5;
 	}
-	static create(word) {
+	static create() {
 		return new Promise((resolve, reject) => {
-			let game = new Game(1, word);
-			// games = readFile('./assets/saved-games.json',games);
-			fs.readFile('./assets/saved-games.json','utf-8', function (err, data) {
-			  if (err) console.log(err)//throw err;
-			  // gamesBuffer.push(data);
-			  console.log(data);
+			// let game = new Game(1);
+
+			Dictionary.getWord().then(word => {
+				console.log('word: ', word);
+				let game = new Game(1,word);
+				if (game != null) {
+					readGames({path:'./assets/saved-games.json'})
+					.then(games => {
+						const gameString = JSON.stringify(game);
+						games[`${game.id}`] = JSON.parse(gameString);
+						writeGames({path:'./assets/saved-games.json'}).then(newGames =>{
+							console.log(newGames);
+							return resolve(game);
+						});
+					});
+				}
+				console.log("creating...");
+			    return reject(game);
 			});
-			if (game != null) {
-				fs.writeFile('./assets/saved-games.json', JSON.stringify(game), function (err) {
-				  if (err){
-				  	return reject(game);
-				  } 
-				  resolve(game);
-				});
-				return;
-			}
 
-			return reject(game);		
-		})
-	}
-
-	readFile(url, gamesBuffer) {
-		fs.readFile(url,'utf-8', function (err, data) {
-		  if (err) throw err;
-		  // gamesBuffer.push(data);
-		  console.log(data);
+			// return reject(game);		
 		});
-		return gamesBuffer;
 	}
+
 	toString(){
 		return `"${this.id}": {\n"id": ${this.id},\n"hint": "${this.hint}",\n"leftAttempts": ${this.leftAttempts}\n},\n`;
 	}
-	getId(){
-		return this.id;
-	}
-	getHint(){
-		return this.hint;
-	}
-	getLeftAttempts(){
-		return this.leftAttempts;
-	}
 }
+
+function readGames ({path = ''} = {}) {
+	return new Promise((resolve, reject) => {
+		if (games == null) {
+			fs.readFile(path, 'utf-8', (err, data) => {
+			  if (err) {
+			  	return reject(err)
+			  };
+			  games = JSON.parse(data);
+			  resolve(games)
+			});
+			return;
+		}
+
+		return resolve(games)		
+	})
+}
+
+function writeGames ({path = ''} = {}) {
+	return new Promise((resolve, reject) => {
+		if (games != null) {
+			fs.writeFile(path, JSON.stringify(games), function (err) {
+				  if (err){
+				  	return reject(err);
+				  } 
+				  resolve(games);
+				});
+			return;
+		}
+
+		return resolve(games)		
+	})
+}
+
 
 module.exports = Game
