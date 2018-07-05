@@ -1,6 +1,8 @@
 const express = require('express')
 const app = express()
 const Dictionary = require('./src/dictionary.js')
+const Game = require('./src/game.js')
+
 Dictionary.getWord().then(word => console.log('word: ', word))
 
 app.get('/game', (req, res) => {
@@ -24,7 +26,7 @@ app.get('/game', (req, res) => {
     })
 })
 
-app.get('/game', (req, res) => {
+app.get('/gameObject', (req, res) => {
     Game.create()
         .then(game => {
             res.send(game)            
