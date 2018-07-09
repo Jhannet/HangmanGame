@@ -14,7 +14,6 @@ class Game {
 		let sizeMax = 8;
 
 		if(difficulty.includes('hard')){
-			console.log(difficulty)
 			sizeMin = 8;
 			sizeMax = 50;
 		}else{

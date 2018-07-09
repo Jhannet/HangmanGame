@@ -7,7 +7,6 @@ class Dictionary {
 			.then(totalWords => {
 			  const filteredWords = totalWords.filter(word => {
 			  	if(includePunctuation){
-			  	    // console.log(includePunctuation)
 			  		return word.length > sizeMin && word.length < sizeMax;
 			  	}
 			  	return word.length > sizeMin && word.length < sizeMax && !includePunctuation(word);
